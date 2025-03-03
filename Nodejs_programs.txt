@@ -1,0 +1,409 @@
+Program-1: Addition using Command line argument
+===============================================
+1. Add the below code in addition_demo.js file
+   let args = process.argv.slice(2);
+   const [a, b] = args;
+   console.log(`Addtion of ${a} & ${b} is ${+a + +b}`);
+2. Run the file 
+   node addition_demo.js 10 20
+
+
+Program-2: Arithmetic Example using Command line argument
+=========================================================
+const arg = process.argv.slice(2);
+if (process.argv.length === 2) {
+  console.error("Please provide 1 operator and 2 operand values");
+  process.exit(1);
+}
+const op = arg[0];
+const num1 = Number(arg[1]);
+const num2 = Number(arg[2]);
+switch (op) {
+  case "+":
+    console.log(`Result of ${num1} + ${num2} = ${num1 + num2}`);
+    break;
+  case "-":
+    console.log(`Result of ${num1} - ${num2} = ${num1 - num2}`);
+    break;
+  case "*":
+    console.log(`Result of ${num1} * ${num2} = ${num1 * num2}`);
+    break;
+  case "/":
+    if (num2 == 0) {
+      console.log("cannot be divided by zero!!");
+    } else {
+      console.log(`Result of ${num1} / ${num2} = ${num1 / num2}`);
+    }
+    break;
+  default:
+    console.log(`operation cannot be performed!!`);
+}
+
+
+
+
+Program-3: URL Module
+=====================
+var url = require('url');
+var adr = 'http://localhost:8080/default.htm?year=2017&month=february';
+var q = url.parse(adr, true);
+
+console.log(q.host); //returns 'localhost:8080'
+console.log(q.pathname); //returns '/default.htm'
+console.log(q.search); //returns '?year=2017&month=february'
+
+var qdata = q.query; //returns an object: { year: 2017, month: 'february' }
+console.log(qdata.month); //returns 'february'
+
+
+
+
+Program-4: File Operations
+==========================
+let fs = require('fs');
+// Over write the exisiting text
+fs.writeFile('myText.txt','This is about the Fs',function(){
+    console.log('Task Done')
+});
+// Keep adding text in same file
+fs.appendFile('myCode.txt','I m doing nodejs \n',function(){
+    console.log('Task Done')
+});
+// ReadFile
+fs.readFile('location.json','utf-8',function(err,data){
+    if(err) throw err;
+    console.log(data)
+});
+//Rename File
+fs.rename('myText.txt','mydata.txt',function(err){
+    if(err) throw err;
+    console.log('File Renamed')
+});
+// Delete File
+fs.unlink('mydata.txt',function(err){
+    if(err) throw err;
+    console.log('File Deleted')
+})
+
+
+Winston
+========
+const express = require('express');
+const winston = require('winston');
+
+const app = express();
+const port = 3000;
+
+// Configure Winston logger
+const logger = winston.createLogger({
+  level: 'info', // Log level: 'error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, level, message }) => {
+      return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+    })
+  ),
+  transports: [
+    new winston.transports.Console(), // Log to the console
+    new winston.transports.File({ filename: 'app.log' }) // Log to a file
+  ]
+});
+
+// Middleware to log each request
+app.use((req, res, next) => {
+  logger.info(`HTTP ${req.method} ${req.url}`);
+  next();
+});
+
+// Basic routes
+app.get('/', (req, res) => {
+  logger.info('Home route accessed.');
+  res.send('Hello, World!');
+});
+
+app.get('/error', (req, res) => {
+  logger.error('Simulated error route accessed.');
+  res.status(500).send('This is an error route.');
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  logger.error(`Error: ${err.message}`);
+  res.status(500).send('Something went wrong!');
+});
+
+app.listen(port, () => {
+  logger.info(`Server is running on http://localhost:${port}`);
+});
+
+
+
+
+without CORS
+============
+1. add the below backend code in a file
+
+const express = require("express");
+const app = express();
+const port = 5000;
+app.get("/cars", (request, response) => {
+  return response.json(["Mercedes", "BMW", "Toyota", "Audi"]);
+});
+app.listen(port, () => {
+  console.log("   >  backend started...");
+});
+
+2. open https://www.w3schools.com/ and console, execute the below code in console
+fetch("http://localhost:5000/cars").then(req => req.text()).then(console.log)
+
+
+ExecFile
+=========
+const { execFile } = require('child_process');
+const path = require('path');
+execFile(path.resolve(__dirname, 'demo_1.bat'), { shell: true },(error, stdout, stderr) => {
+    // if command not found
+    if (error) {
+        console.log(error.message);
+        return;
+    }
+    // if error while executing the command
+    if (stderr) {
+        console.log(stderr);
+        return;
+    }
+    console.log(stdout);
+});
+
+
+
+Template Engine - PUG
+=====================
+1. npm init -y
+2. npm install express pug
+3. add the below code in app.js
+	const express = require('express');
+	const app = express();
+	
+	app.set('views', './views');
+	app.set('view engine', 'pug');
+
+	app.get('/', (req, res) => {
+		res.render('index');
+	});
+	app.listen(5000, () => {
+		console.log('Server started at port 5000');
+	});
+
+
+Weather Application using EJS
+=============================
+1. npm init -y
+2. npm install express ejs axios
+
+
+
+
+MongoDB + NodeJs
+=================
+1. npm i express mongodb
+2. Add the below code for DB connection
+	const express = require("express");
+	const app = express();
+	const MongoClient = require("mongodb").MongoClient;
+	app.get("/users", async function (req, res) {
+	  const client = await MongoClient.connect("mongodb://localhost:27017/");
+	  const users = client.db("march2023").collection("users").find({});
+	  const result = await users.toArray();
+	  res.json(result);
+	  await client.close();
+	});
+
+
+
+GraphQL
+========
+1. npm init -y
+2. npm install graphql express express-graphql
+3. add server.js
+
+
+query getSingleCourse($courseID: Int!) {
+    course(id: $courseID) {
+        title
+        author
+        description
+        topic
+        url
+    }
+}
+-----------
+{ 
+    "courseID":1
+}
+
+
+
+
+Apollo Server & GraphQL
+========================
+1. Create a new project
+   mkdir graphql-server-example
+   cd graphql-server-example  
+2. Install dependencies
+   npm init --yes
+   npm i express cors @apollo/server graphql mongoose
+3. Define GraphQL schema
+   const typeDefs = `
+        #graphql
+        type Product{
+            id: ID,
+            name: String,
+            category: String,
+            price: Int,
+            quantity: Int,
+            rating: [Int],
+        }
+        type Query {
+            getProductList: [Product]
+            getProduct(id:ID): Product
+        }
+        type Mutation {
+
+        }
+  `
+4. Define resolver
+  const resolvers = {
+    Query: {
+        getProductList: async () => {
+            const products = await productModel.find();
+            return products;
+        },
+        getProduct: async (parent, args) => {
+            const product = await productModel.findById(args.id);
+            return product;
+        },
+    },
+    Mutation: {
+
+    }
+ }
+5. Create an instance of ApolloServer
+	const server = new ApolloServer({
+	  typeDefs,
+	  resolvers,
+	});
+	const { url } = await startStandaloneServer(server, {
+	  listen: { port: 4000 },
+	});
+	console.log(`🚀  Server ready at: ${url}`);
+
+
+
+
+Express File Upload
+====================
+const express = require('express');
+const fileUpload = require('express-fileupload');
+const app = express();
+app.use(fileUpload());
+app.get('/', (req, res) => {
+    res.send(`
+        <form method='post' action='http://localhost:5000/upload' encType='multipart/form-data'>
+            <input type='file' name='myFiles' multiple />
+            <input type='submit' value='Upload!' />
+        </form>
+        `)
+})
+app.post('/upload', async (req, res) => {
+    let sampleFile;
+    let uploadPath;
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        res.status(400).send('No Files were uploaded');
+    } else {
+        myFiles = req.files.myFiles;
+        console.log(myFiles)
+        uploadPath = `${__dirname}/assets/${myFiles.name}`;
+
+        myFiles.mv(uploadPath, (err) => {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.send(`${myFiles.name} Uploaded Succesfully!!`)
+            }
+        })
+    }
+});
+app.listen(5000, () => {
+    console.log(`Server Running at 5000 port`)
+});
+   
+
+Formidable File Upload
+======================
+const express = require('express');
+const fs = require('fs');
+const { formidable } = require('formidable');
+const app = express();
+app.get('/', (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(`
+      <h2>With Node.js <code>"http"</code> module</h2>
+      <form action="/api/upload" enctype="multipart/form-data" method="post">
+
+        <div>Name: <input type="text" name="name" /></div>
+        <div>Email: <input type="text" name="email" /></div>
+        <div>Phone: <input type="text" name="phone" /></div>
+
+        <div>File: <input type="file" name="myFiles" multiple="multiple" /></div>
+
+        <input type="submit" value="Upload" />
+      </form>
+    `);
+})
+app.post('/api/upload', async (req, res) => {
+    const form = formidable({});
+    let fields;
+    let files;
+    try {
+        [fields, files] = await form.parse(req);
+    } catch (err) {
+        res.end(String(err));
+        return;
+    }
+    for (let file of files.myFiles) {
+        let oldPath = file.filepath;
+        let newPath = `${__dirname}/assets/${file.originalFilename}`;
+        let imageFile = fs.readFileSync(oldPath);
+        fs.writeFileSync(newPath, imageFile);
+        res.end('Files Uploaded Succesfully!!!')
+    }
+});
+app.listen(5000, () => {
+    console.log(`Server Running at 5000 port`)
+}); 
+   
+
+
+
+express validator
+=================
+npm init -y
+npm install express ejs body-parser express-validator
+
+
+Redis
+=====
+npm i express axios redis@3.1.2
+
+
+
+Swagger
+=======
+1. npm init -y
+2. npm install swagger-jsdoc swagger-ui-express 
+3. add server.js
+4. add the file swagger.json to define the operations.
+5. add the file swagger.css to define custom css
+6. Node server.js and try 'http://localhost:5000/api-docs/'
